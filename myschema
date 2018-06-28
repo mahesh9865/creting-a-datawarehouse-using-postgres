@@ -1,0 +1,92 @@
+<Schema name="myschema">
+  <Dimension type="TimeDimension" visible="true" highCardinality="false" name="Time">
+    <Hierarchy name="Date" visible="true" hasAll="true" allMemberName="All Dates" primaryKey="date_pk">
+      <Table name="dim_date" schema="public">
+      </Table>
+      <Level name="Description" visible="true" column="day_desc" type="String" uniqueMembers="false" levelType="TimeDays" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+    <Hierarchy name="Months" visible="true" hasAll="true" allMemberName="All Months" primaryKey="date_pk">
+      <Table name="dim_date" schema="public">
+      </Table>
+      <Level name="Year" visible="true" column="year_number" type="Integer" uniqueMembers="false" levelType="TimeYears" hideMemberIf="Never">
+      </Level>
+      <Level name="Months" visible="true" column="month_number" type="Integer" uniqueMembers="false" levelType="TimeMonths" hideMemberIf="Never">
+      </Level>
+      <Level name="Days" visible="true" column="day_of_month_number" type="Integer" uniqueMembers="false" levelType="TimeDays" hideMemberIf="Never">
+      </Level>
+    </Hierarchy>
+  </Dimension>
+  <Cube name="mycube" visible="true" cache="true" enabled="true">
+    <Table name="pre_fact" schema="public">
+    </Table>
+    <Dimension type="StandardDimension" visible="true" foreignKey="fk_product" highCardinality="false" name="customers">
+      <Hierarchy name="Identification" visible="true" hasAll="true" allMemberName="AllCustomers" primaryKey="pk_customers">
+        <Table name="dim_customers" schema="public">
+        </Table>
+        <Level name="Segment" visible="true" column="Customer Segment" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Name" visible="true" column="Customer Name" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+      <Hierarchy name="Location" visible="true" hasAll="true" primaryKey="pk_customers">
+        <Table name="dim_customers" schema="public">
+        </Table>
+        <Level name="Provience" visible="true" column="province" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Region" visible="true" column="region" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" visible="true" foreignKey="fk_order" highCardinality="false" name="Orders">
+      <Hierarchy name="Identification" visible="true" hasAll="true" allMemberName="Allocations" primaryKey="pk_order">
+        <Table name="dim_orders" schema="public">
+        </Table>
+        <Level name="Code" visible="true" column="Order Code" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Priority" visible="true" column="Order Priority" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <Dimension type="StandardDimension" visible="true" foreignKey="fk_product" highCardinality="false" name="Products">
+      <Hierarchy name="Category" visible="true" hasAll="true" allMemberName="AllCategory" primaryKey="pk_product">
+        <Table name="dim_product" schema="public">
+        </Table>
+        <Level name="Category" visible="true" column="Product Category" type="String" internalType="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Subcategory" visible="true" column="Product Sub-Category" type="String" internalType="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Code" visible="true" column="Product Code" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Name" visible="true" column="Product Name" type="Integer" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+      <Hierarchy name="Containers" visible="true" hasAll="true" allMemberName="Allcontainers" primaryKey="pk_product">
+        <Table name="dim_products" schema="public">
+        </Table>
+        <Level name="Container" visible="true" column="Product Container" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Code" visible="true" column="Product Code" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+        <Level name="Name" visible="true" column="Product Name" type="String" uniqueMembers="false" levelType="Regular" hideMemberIf="Never">
+        </Level>
+      </Hierarchy>
+    </Dimension>
+    <DimensionUsage source="Time" name="Time" visible="true" foreignKey="fk_date" highCardinality="false">
+    </DimensionUsage>
+    <Measure name="Sales" column="sales" datatype="Numeric" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="Discount" column="discount" datatype="Numeric" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="Quantity" column="Order Quantity" datatype="Numeric" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="Product Base Margin" column="Product Base Margin" datatype="Numeric" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="Profit" column="profit" datatype="Numeric" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="Shipping Cost" column="Shipping Cost" datatype="String" aggregator="sum" visible="true">
+    </Measure>
+    <Measure name="Unit Price" column="Unit Price" datatype="Numeric" aggregator="sum" visible="true">
+    </Measure>
+  </Cube>
+</Schema>
